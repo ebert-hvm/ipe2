@@ -1,0 +1,11 @@
+﻿Instrument in Sequence;1 - B2901A - USB0::0x0957::0x8B18::MY51144612::0::INSTR;;;;;
+Instrument in Sequence;2 - 34420A - GPIB0::22::INSTR;;;;;
+Start Time;2022-05-16 21:56:41.001;;;;;
+Stop Time;2022-05-16 21:56:41.001;;;;;
+;;;;;;
+Time;Step;1 - Set CH1 On/Off;1 - Set CH1 Voltage Limit;1 - Set CH1 Current Limit;2 - Get Measurement Value;1 - Set CH1 On/Off ()
+2022-05-16 21:56:41.067;1;1;;;;
+2022-05-16 21:56:41.098;2;;0,12;;;
+2022-05-16 21:56:41.126;3;;;0,1;;
+2022-05-16 21:56:50.601;4;;;;5,88646E-06;
+2022-05-16 21:56:50.652;5;;;;;0
