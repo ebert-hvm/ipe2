@@ -2,6 +2,7 @@ import pyvisa as visa
 from input import Input
 import time as tm
 import pandas as pd
+import constantes as c
 
 
 class Resources:
@@ -14,7 +15,7 @@ class Resources:
     
     def start(self, curr_lim: float, volt_lim: float) -> None:
         self.power_supply.write("OUTP ON")
-        tm.sleep(2)
+        tm.sleep(c.sleep_time_power_supply)
         self.power_supply.write(f"CURR:LIM {str(curr_lim)}")
         self.power_supply.write(f"VOLT:LIM {str(volt_lim)}")
         
@@ -23,12 +24,12 @@ class Resources:
         self.power_supply.write(f"CURR {str(self.input.amperes)}")
 
     def read_value(self) -> None:
-        tm.sleep(15)
+        tm.sleep(c.sleep_time_multimeter//2)
         self.values.append(self.multimeter.query('READ?'))
-        tm.sleep(15)
+        tm.sleep(c.sleep_time_multimeter//2)
 
     def finish(self) -> None:
-        tm.sleep(2)
+        tm.sleep(c.sleep_time_power_supply)
         self.power_supply.write("OUTP OFF")
     
     def to_data_frame(self) -> pd.core.frame.DataFrame:
