@@ -8,11 +8,10 @@
 #define C2 7
 #define N 4
 
-int start;
-int stop_count;
-int key;
+int key, timedelay, start, stop_count, total_probes;
 int pins1[N] = {A1, B1, C1, D1};
 int pins2[N] = {A2, B2, C2, D2};
+unsigned char ch1, ch2;
 
 void setup()
 {
@@ -26,14 +25,25 @@ void setup()
     pinMode(C2, OUTPUT);
     pinMode(D2, OUTPUT);
     pinMode(A0, INPUT);
-    key = 8, start = 0, stop_count = 0;
+    key = 8, start = 0, stop_count = 0, timedelay = 2000, total_probes = 4;
 }
 
 void loop()
 {
-    if(Serial.read() != -1)
+    if(!start && Serial.available() > 0)
     {
-        start = Serial.read()
+        ch1 = Serial.read();
+        if(ch1)
+        {
+            start = 1;
+            total_probes = ch1 >> 4;
+            ch1<<=4;
+            timedelay = 1 + (ch1>>3);
+        }
+        else
+        {
+            start = 0;
+        }
     }
     if(start)
     {
@@ -52,8 +62,8 @@ void loop()
         }
         // Serial.println(analogRead(A0));
         key = 8 + (key + 1 - 8) % N;
-        delay(5000);
-        if(++stop_count == N)
+        delay(timedelay);
+        if(++stop_count == total_probes)
         {
             stop_count = 0;
             start = 0;
