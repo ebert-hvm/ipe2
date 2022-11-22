@@ -51,7 +51,7 @@ class GUI:
             if delay != '':
                 delay = int(delay)
             else:
-                volt_lim = 5
+                delay = 5
 
             name_arq = entry_arq.get()
             if name_arq == '':
@@ -161,5 +161,3 @@ class GUI:
 
 
         top.mainloop()
-
-obj = GUI()
