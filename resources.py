@@ -39,10 +39,16 @@ class Resources:
         return df
 
     def configure_arduino(self) -> None:
+        # arduino = serial.Serial(port= None,baudrate=c.serial_port)
+        # tm.sleep(c.delay_arduino)
         pass
 
     def run_arduino(self) -> None:
+        # arduino.write(1)
         pass
 
     def stop_arduino(self) -> None:
+        # arduino.write(0)
+        # tm.sleep(c.delay_arduino)
+        # arduino.close()
         pass
