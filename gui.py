@@ -18,10 +18,31 @@ class GUI:
             dim_volt, dim_amp = 0,0
             # dim_volt = menu_voltagem
             # dim_amp = menu_corrente
+            number_sondas = entry_sondas.get()
+            medidas_por_sonda = entry_medida.get()
             name_arq = entry_arq.get()
+            # tipo_arquivo = menu_saida
             amostra_circular = bool(tipo_amostra_circular.get())
             amostra_condutor = bool(tipo_amostra_condutor.get())
-            self.entrada = Input(volts,amp,dim_volt,dim_amp,amostra_circular, amostra_condutor)
+
+            if number_sondas != '':
+                number_sondas = int(number_sondas)
+            else:
+                number_sondas = 1
+            if medidas_por_sonda != '':
+                medidas_por_sonda = int(medidas_por_sonda)
+            else:
+                medidas_por_sonda = 10
+
+            self.entrada = Input(volts,
+                                 amp,
+                                 dim_volt,
+                                 dim_amp,
+                                 amostra_circular,
+                                 amostra_condutor,
+                                 name_arq,
+                                 loops=medidas_por_sonda,
+                                 sondas=number_sondas)
 
             top.destroy()
 

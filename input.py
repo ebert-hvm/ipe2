@@ -6,6 +6,8 @@ class Input:
                 dim_amp: int, 
                 amostra_circular: bool, 
                 amostra_condutor: bool,
+                nome_arquivo: str,
+                tipo_arquivo: int,
                 loops = 10,
                 sondas = 1) -> None:
         
@@ -16,6 +18,7 @@ class Input:
         self.tipo_da_amostra = self.tipo_amostra(amostra_circular, amostra_condutor)
         self.medidas = loops*sondas
         self.sondas = sondas
+        self.nome_arquivo = nome_arquivo
 
     def tipo_amostra(self, tipo_amostra_1: bool, tipo_amostra_condutor: bool) -> int:
         tipo = 0
