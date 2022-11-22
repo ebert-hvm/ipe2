@@ -1,10 +1,8 @@
 from gui import GUI
-from input import Input
 from resources import Resources
 from dataframe import Data
-import pandas as pd
-import tkinter as tk
 import time as tm
+import serial 
 
 
 gui = GUI()

@@ -8,8 +8,8 @@ class Input:
                 amostra_condutor: bool,
                 nome_arquivo: str,
                 tipo_arquivo: int,
-                loops = 10,
-                sondas = 1) -> None:
+                loops: int,
+                sondas: int) -> None:
         
         self.voltagem = volts
         self.corrente = amperes
@@ -19,6 +19,7 @@ class Input:
         self.medidas = loops*sondas
         self.sondas = sondas
         self.nome_arquivo = nome_arquivo
+        self.tipo_arquivo = tipo_arquivo
 
     def tipo_amostra(self, tipo_amostra_1: bool, tipo_amostra_condutor: bool) -> int:
         tipo = 0

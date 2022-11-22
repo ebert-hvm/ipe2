@@ -15,7 +15,7 @@ class GUI:
         def saida():
             volts = float(entry_voltagem.get())
             amp = float(entry_corrente.get())
-            dim_volt, dim_amp = 0,0
+            dim_volt, dim_amp,tipo_arquivo = 0,0,0
             # dim_volt = menu_voltagem
             # dim_amp = menu_corrente
             number_sondas = entry_sondas.get()
@@ -41,6 +41,7 @@ class GUI:
                                  amostra_circular,
                                  amostra_condutor,
                                  name_arq,
+                                 tipo_arquivo,
                                  loops=medidas_por_sonda,
                                  sondas=number_sondas)
 
@@ -152,5 +153,3 @@ class GUI:
 
 
         top.mainloop()
-
-obj = GUI()
