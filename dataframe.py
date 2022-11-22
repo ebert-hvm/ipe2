@@ -20,6 +20,8 @@ class Data:
         for i in range(df.shape[1]):
             colunas[i] = f'sonda {i+1}'
         df.rename(columns=colunas, index=medida, inplace=True)
+        df.index.name = 'medidas'
+        self.data = df
 
     def exporta_dados(self, tipo_arquivo: int, nome_arquivo: str) -> None:
         if tipo_arquivo == 0:

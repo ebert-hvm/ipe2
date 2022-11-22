@@ -11,10 +11,8 @@ class Input:
                 loops: int,
                 sondas: int) -> None:
         
-        self.voltagem = volts
-        self.corrente = amperes
-        self.unidade_volt = dim_volt
-        self.unidade_corrente = dim_amp
+        self.voltagem = volts*10**(-3*dim_volt)
+        self.corrente = amperes*10**(-3*dim_amp)
         self.tipo_da_amostra = self.tipo_amostra(amostra_circular, amostra_condutor)
         self.medidas = loops*sondas
         self.sondas = sondas

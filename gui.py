@@ -16,12 +16,12 @@ class GUI:
             volts = float(entry_voltagem.get())
             amp = float(entry_corrente.get())
             dim_volt, dim_amp,tipo_arquivo = 0,0,0
-            # dim_volt = menu_voltagem
+            # dim_volt = menu_voltagem (0 = V, 1=mV, 2=µV)
             # dim_amp = menu_corrente
             number_sondas = entry_sondas.get()
             medidas_por_sonda = entry_medida.get()
             name_arq = entry_arq.get()
-            # tipo_arquivo = menu_saida
+            # tipo_arquivo = menu_saida (0 = csv, 1 = excel)
             amostra_circular = bool(tipo_amostra_circular.get())
             amostra_condutor = bool(tipo_amostra_condutor.get())
 
@@ -139,10 +139,9 @@ class GUI:
 
         csv_var = tk.IntVar()
         xlsx_var = tk.IntVar()
-        n_sei_var = tk.IntVar()
+        
         menu_saida.menu.add_checkbutton(label="csv", variable=csv_var)
         menu_saida.menu.add_checkbutton(label="excel", variable=xlsx_var)
-        menu_saida.menu.add_checkbutton(label="n sei", variable=n_sei_var)
 
 
         ### BOTÃO DE ENTER
