@@ -47,9 +47,6 @@ class GUI:
             else:
                 medidas_por_sonda = 10
 
-            amostra_circular = bool(tipo_amostra_circular.get())
-            amostra_condutor = bool(tipo_amostra_condutor.get())
-
             delay = entry_delay.get()
             if delay != '':
                 delay = int(delay)
@@ -69,8 +66,6 @@ class GUI:
                                  dim_volt,
                                  dim_volt_lim,
                                  dim_amp,
-                                 amostra_circular,
-                                 amostra_condutor,
                                  name_arq,
                                  tipo_arquivo,
                                  delay,
@@ -122,30 +117,6 @@ class GUI:
         label_amp.set('dimensão')
         menu_corrente = tk.OptionMenu(top,label_amp, *labels_corrente)
         menu_corrente.grid(row=2, column=2)
-
-
-        ### TIPOS DE AMOSTRA
-
-        tipo_amostra_circular = tk.IntVar()
-        tipo_amostra_condutor = tk.IntVar()
-
-        check_amostra_circular = tk.Checkbutton(top, text="amostra circular",
-                                                variable=tipo_amostra_circular, 
-                                                onvalue=True,
-                                                offvalue=False,
-                                                height=5,
-                                                width=20)
-
-
-        check_amostra_condutor = tk.Checkbutton(top, text="amostra condutora",
-                                                variable=tipo_amostra_condutor, 
-                                                onvalue=True,
-                                                offvalue=False,
-                                                height=5,
-                                                width=20)
-
-        check_amostra_circular.grid(row = 3, column= 0)
-        check_amostra_condutor.grid(row = 3, column= 1)
 
 
         ### NÚMERO DE SONDAS E MEDIÇÕES
