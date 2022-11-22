@@ -3,6 +3,7 @@ from input import Input
 import time as tm
 import pandas as pd
 import constantes as c
+import serial
 
 
 class Resources:
@@ -14,6 +15,7 @@ class Resources:
         self.input = entrada
     
     def start(self, curr_lim: float, volt_lim: float) -> None:
+        tm.sleep(c.sleep_time_power_supply)
         self.power_supply.write("OUTP ON")
         tm.sleep(c.sleep_time_power_supply)
         self.power_supply.write(f"CURR:LIM {str(curr_lim)}")
@@ -35,3 +37,12 @@ class Resources:
     def to_data_frame(self) -> pd.core.frame.DataFrame:
         df = pd.DataFrame(self.values, columns= 'medidas')
         return df
+
+    def configure_arduino(self) -> None:
+        pass
+
+    def run_arduino(self) -> None:
+        pass
+
+    def stop_arduino(self) -> None:
+        pass

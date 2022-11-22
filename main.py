@@ -9,13 +9,13 @@ import serial
 gui = GUI()
 entry = gui.entrada
 leitura = Resources(entry)
-tm.sleep(1)
 leitura.start(curr_lim= c.limit_current, volt_lim= c.limit_volt)
 leitura.power_supply_setting()
+leitura.configure_arduino()
+leitura.run_arduino()
 for i in range(leitura.input.sondas*leitura.input.medidas):
     leitura.read_value()
-
-
+leitura.stop_arduino()
 
 df = leitura.to_data_frame()
 leitura.finish()
