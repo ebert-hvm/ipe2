@@ -13,26 +13,43 @@ class GUI:
         ### BOTÃO DE SAÍDA
 
         def saida():
-            volts = float(entry_voltagem.get())
-            amp = float(entry_corrente.get())
-            dim_volt, dim_amp,tipo_arquivo = 0,0,0
-            # dim_volt = menu_voltagem (0 = V, 1=mV, 2=µV)
-            # dim_amp = menu_corrente
-            number_sondas = entry_sondas.get()
-            medidas_por_sonda = entry_medida.get()
-            name_arq = entry_arq.get()
-            # tipo_arquivo = menu_saida (0 = csv, 1 = excel)
-            amostra_circular = bool(tipo_amostra_circular.get())
-            amostra_condutor = bool(tipo_amostra_condutor.get())
+            volts = entry_voltagem.get()
+            if volts != '':
+                volts = float(volts)
+            else:
+                volts = 0.0
 
+            amp = entry_corrente.get()
+            if amp != '':
+                amp = float(amp)
+            else:
+                amp = 0.0
+            
+            tipo_arquivo = 0
+            dim_volt = labels_voltagem.index(label_volt.get())
+            dim_amp = labels_corrente.index(label_amp.get())
+            
+            number_sondas = entry_sondas.get()
             if number_sondas != '':
                 number_sondas = int(number_sondas)
             else:
                 number_sondas = 1
+
+            medidas_por_sonda = entry_medida.get()
             if medidas_por_sonda != '':
                 medidas_por_sonda = int(medidas_por_sonda)
             else:
                 medidas_por_sonda = 10
+
+            amostra_circular = bool(tipo_amostra_circular.get())
+            amostra_condutor = bool(tipo_amostra_condutor.get())
+
+            name_arq = entry_arq.get()
+            if name_arq == '':
+                name_arq = 'out'
+
+            tipo_arquivo = labels_arquivo.index(label_arquivo.get())
+
 
             self.entrada = Input(volts,
                                  amp,
@@ -51,6 +68,7 @@ class GUI:
         ### GERAÇÃO DA INTERFACE
 
         top = tk.Tk()
+        top.geometry("500x300")
 
         ### VOLTAGEM E AMPERAGEM
 
@@ -59,17 +77,12 @@ class GUI:
         entry_voltagem = tk.Entry(top, bd=5, width=30)
         entry_voltagem.grid(row=0, column=1)
 
-        menu_voltagem = tk.Menubutton(top, text="dimensão", relief='raised')
-        menu_voltagem.grid(row=0, column=2)
-        menu_voltagem.menu = tk.Menu(menu_voltagem, tearoff=0)
-        menu_voltagem["menu"] = menu_voltagem.menu
 
-        volt_var = tk.IntVar()
-        mili_volt_var = tk.IntVar()
-        micro_volt_var = tk.IntVar()
-        menu_voltagem.menu.add_checkbutton(label="V", variable=volt_var)
-        menu_voltagem.menu.add_checkbutton(label="mV", variable=mili_volt_var)
-        menu_voltagem.menu.add_checkbutton(label="µV", variable=micro_volt_var)
+        labels_voltagem = ["V",'mV','µV']
+        label_volt = tk.StringVar(top)
+        label_volt.set('ddp da fonte')
+        menu_volt = tk.OptionMenu(top,label_volt, *labels_voltagem)
+        menu_volt.grid(row=0, column=2)
 
 
         label_corrente = tk.Label(top,text = 'corrente da fonte')
@@ -81,12 +94,12 @@ class GUI:
         menu_corrente.menu = tk.Menu(menu_corrente, tearoff=0)
         menu_corrente["menu"] = menu_corrente.menu
 
-        ampere_var = tk.IntVar()
-        mili_ampere_var = tk.IntVar()
-        micro_ampere_var = tk.IntVar()
-        menu_corrente.menu.add_checkbutton(label="A", variable=ampere_var)
-        menu_corrente.menu.add_checkbutton(label="mA", variable=mili_ampere_var)
-        menu_corrente.menu.add_checkbutton(label="µA", variable=micro_ampere_var)
+
+        labels_corrente = ["A",'mA','µA']
+        label_amp = tk.StringVar(top)
+        label_amp.set('corrente da fonte')
+        menu_corrente = tk.OptionMenu(top,label_amp, *labels_corrente)
+        menu_corrente.grid(row=1, column=2)
 
 
         ### TIPOS DE AMOSTRA
@@ -132,16 +145,11 @@ class GUI:
         entry_arq = tk.Entry(top, bd=5, width=30)
         entry_arq.grid(row=7, column=1)
 
-        menu_saida = tk.Menubutton(top, text="tipo do arquivo", relief='raised')
-        menu_saida.grid(row=7, column=2)
-        menu_saida.menu = tk.Menu(menu_saida, tearoff=0)
-        menu_saida["menu"] = menu_saida.menu
-
-        csv_var = tk.IntVar()
-        xlsx_var = tk.IntVar()
-        
-        menu_saida.menu.add_checkbutton(label="csv", variable=csv_var)
-        menu_saida.menu.add_checkbutton(label="excel", variable=xlsx_var)
+        labels_arquivo = ["csv",'excel']
+        label_arquivo = tk.StringVar(top)
+        label_arquivo.set('tipo do arquivo')
+        menu_arquivo = tk.OptionMenu(top,label_arquivo, *labels_arquivo)
+        menu_arquivo.grid(row=7, column=2)
 
 
         ### BOTÃO DE ENTER
@@ -152,3 +160,5 @@ class GUI:
 
 
         top.mainloop()
+
+obj = GUI()
