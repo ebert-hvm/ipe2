@@ -23,7 +23,9 @@ class Resources:
         self.power_supply.write(f"CURR {str(self.input.amperes)}")
 
     def read_value(self) -> None:
+        tm.sleep(15)
         self.values.append(self.multimeter.query('READ?'))
+        tm.sleep(15)
 
     def finish(self) -> None:
         tm.sleep(2)

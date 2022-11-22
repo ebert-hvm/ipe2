@@ -6,9 +6,6 @@ class Data:
         self.data = data
     
     def trata_dados(self, number_sondas: int) -> None:
-        self.data = pd.read_csv('Exports/teste3.csv', sep = ';')
-        self.data.columns = ['medidas']
-
         self.data['mod'] = [(i+1) % number_sondas for i in range(self.data.shape[0])]
         df = pd.DataFrame()
         grouped_measures = self.data.groupby("mod")
@@ -24,8 +21,8 @@ class Data:
             colunas[i] = f'sonda {i+1}'
         df.rename(columns=colunas, index=medida, inplace=True)
 
-    def exporta_dados(self, tipo_arquivo: str, nome_arquivo: str) -> None:
-        if tipo_arquivo == 'csv':
+    def exporta_dados(self, tipo_arquivo: int, nome_arquivo: str) -> None:
+        if tipo_arquivo == 0:
             self.data.to_csv(nome_arquivo)
-        elif tipo_arquivo == 'excel':
+        elif tipo_arquivo == 1:
             self.data.to_excel(nome_arquivo)
