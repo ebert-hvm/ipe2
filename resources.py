@@ -14,16 +14,15 @@ class Resources:
         self.values = []
         self.input = entrada
     
-    def start(self, curr_lim: float, volt_lim: float) -> None:
+    def start(self) -> None:
         tm.sleep(c.sleep_time_power_supply)
         self.power_supply.write("OUTP ON")
         tm.sleep(c.sleep_time_power_supply)
-        self.power_supply.write(f"CURR:LIM {str(curr_lim)}")
-        self.power_supply.write(f"VOLT:LIM {str(volt_lim)}")
+        self.power_supply.write(f"CURR:LIM {str(self.input.amp_lim)}")
+        self.power_supply.write(f"VOLT:LIM {str(self.input.volt_lim)}")
         
     def power_supply_setting(self) -> None:
         self.power_supply.write(f"VOLT {str(self.input.volts)}")
-        self.power_supply.write(f"CURR {str(self.input.amperes)}")
 
     def read_value(self) -> None:
         tm.sleep(c.sleep_time_multimeter//2)
