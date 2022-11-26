@@ -3,7 +3,7 @@ from input import Input
 import time as tm
 import pandas as pd
 import constantes as c
-import serial
+import arduino
 
 
 class Resources:
@@ -13,6 +13,7 @@ class Resources:
         self.power_supply = self.resources.open_resource("USB0::0x0957::0x8B18::MY51144612::0::INSTR")
         self.values = []
         self.input = entrada
+        self.arduino = arduino.Arduino(port= entrada.arduino_port, baudrate=c.baudrate, probes_number= entrada.sondas, time_delay= entrada.delay)
     
     def start(self) -> None:
         tm.sleep(c.sleep_time_power_supply)

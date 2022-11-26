@@ -10,7 +10,8 @@ class Input:
                 tipo_arquivo: int,
                 delay: int,
                 loops: int,
-                sondas: int) -> None:
+                sondas: int,
+                arduino_port: str) -> None:
         
         self.voltagem = volts*10**(-3*dim_volt)
         self.volt_lim = volt_lim*10**(-3*dim_volt_lim)
@@ -20,3 +21,6 @@ class Input:
         self.nome_arquivo = nome_arquivo
         self.tipo_arquivo = tipo_arquivo
         self.delay = delay
+        self.arduino_port = arduino_port
+    def __str__(self):
+        return 'voltagem: '+str(self.voltagem)+'\n'+'volt_lim: '+str(self.volt_lim)+'\n'+'amp_lim: '+str(self.amp_lim)+'\n'+'medidas: '+str(self.medidas)+'\n'+'sondas: '+str(self.sondas)+'\n'+'nome_arquivo: '+str(self.nome_arquivo)+'\n'+'tipo_arquivo: '+str(self.tipo_arquivo)+'\n'+'delay: '+str(self.delay)+'\n'+'arduino_port: '+str(self.arduino_port)
