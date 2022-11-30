@@ -7,31 +7,29 @@ class Table():
         self.row = row
         self.col = col      
         self.tables_number = tables_number
+        self.cur = 0
         self.tables = np.zeros((self.tables_number,self.row,self.col)).tolist()
         self.grid = self.make_grid()
-        self.cur = 0
+  
         self.switch_table = self.modify_table()
 
-    def make_row_label(self):
-        for i in range(self.row):
-            label = tk.Label(self.root, text=str(i+self.cur*self.row))
-            label.grid(row=i+1, column=4)
     def make_grid(self):
         grid = []
         for i in range(self.row):
+            labelc = tk.Label(self.root, text=str(i+1))
+            labelc.grid(row=i+1, column=4)
             lst = []
-            label = tk.Label(self.root)
-            label.grid(row=i+1, column=4)
             for j in range(self.col):
                 s = tk.StringVar(self.root)
                 s.set('')
                 e = tk.Entry(self.root, width=10, bd= 5, textvariable=s)
-                e.grid(row=i+1, column=j+4)
+                e.grid(row=i+1, column=j+5)
                 lst.append(s)
             grid.append(lst)
         for i in range(self.col):
             label = tk.Label(self.root, text=str(i+1))
-            label.grid(row=0, column=4+i)
+            label.grid(row=0, column=5+i)
+  
         return grid
     
     def switch(self, val, i, j):
@@ -42,17 +40,18 @@ class Table():
         pass
 
     def modify_table(self):
-        previous_button = tk.Button(self.root, text= 'Anterior', bg='#DDDDDD', width=10, command= self.switch_tables(1))
-        next_button = tk.Button(self.root, text= 'Próximo', bg='#DDDDDD', width=10, command= self.switch_tables(-1))
-        previous_button.grid(row=self.row+1, column=4)
+        previous_button = tk.Button(self.root, text= 'Anterior', bg='#DDDDDD', width=10, command= lambda switch =-1 :self.switch_tables(switch))
+        next_button = tk.Button(self.root, text= 'Próximo', bg='#DDDDDD', width=10, command= lambda switch = 1 :self.switch_tables(switch))
+        previous_button.grid(row=self.row+1, column=5)
         if self.col == 1:
-            next_button.grid(row=self.row+1, column=4+self.col)
+            next_button.grid(row=self.row+1, column=5+self.col)
         else:   
-            next_button.grid(row=self.row+1, column=3+self.col)
+            next_button.grid(row=self.row+1, column=4+self.col)
 
     def switch_tables(self, switch):
-        if self.tables_number < self.cur+switch or self.cur+switch > -1:
+        if self.tables_number > self.cur+switch and self.cur+switch >-1:
             self.cur += switch
+            print(self.cur)
         else:
             return 0
         for i in range(self.row):
