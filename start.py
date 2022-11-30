@@ -1,20 +1,16 @@
 from gui import GUI
 from resources import Resources
-from dataframe import Data
 import time as tm
-import constantes as c
 import serial 
+from .dataframe import Data
+from . import constantes as c
 
 
 def start(entry):
     leitura = Resources(entry)
-    leitura.start(curr_lim= c.limit_current, volt_lim= c.limit_volt)
-    leitura.power_supply_setting()
-    #leitura.configure_arduino()
-    leitura.run_arduino()
+    leitura.start()
     for i in range(leitura.input.sondas*leitura.input.medidas):
         leitura.read_value()
-    leitura.stop_arduino()
 
     df = leitura.to_data_frame()
     leitura.finish()

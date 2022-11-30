@@ -1,6 +1,6 @@
 import serial
 import serial.tools.list_ports
-ports = serial.tools.list_ports.comports()
+#ports = serial.tools.list_ports.comports()
 
 #for port,_,_ in sorted(ports):
 #        print(port)
