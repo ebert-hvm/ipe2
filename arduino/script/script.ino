@@ -1,11 +1,11 @@
-#define A1 0
-#define B1 1
-#define C1 2
-#define D1 3
-#define A2 4
-#define B2 5
-#define D2 6
-#define C2 7
+#define A1 2
+#define B1 3
+#define C1 4
+#define D1 5
+#define A2 6
+#define B2 7
+#define D2 8
+#define C2 9
 #define N 4
 
 int key, timedelay, start, stop_count, total_probes;
@@ -25,7 +25,11 @@ void setup()
     pinMode(C2, OUTPUT);
     pinMode(D2, OUTPUT);
     pinMode(A0, INPUT);
-    key = 8, start = 0, stop_count = 0, timedelay = 2000, total_probes = 4;
+    key = 8;
+    start = 0;
+    stop_count = 0;
+    timedelay = 1000;
+    total_probes = 4;
 }
 
 void loop()
@@ -38,11 +42,11 @@ void loop()
             start = 1;
             total_probes = ch1 >> 4;
             ch1<<=4;
-            timedelay = 1 + (ch1>>3);
+            timedelay = 1000*(1 + (ch1>>3));
         }
         else
         {
-            start = 0;
+            //start = 0;
         }
     }
     if(start)

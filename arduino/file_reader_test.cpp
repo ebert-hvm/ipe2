@@ -8,6 +8,7 @@ int main()
     unsigned char b;
     int n, t;
     cin >> b;
+    cout << b;
     if (b){
         n = b>>4;
         b<<=4;

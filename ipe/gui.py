@@ -36,29 +36,35 @@ class GUI:
             print('erro')
          
     def check_input_error(self):
+        #try:
+        arduino_port = self.input.get_data('port')
+        volts = float(self.input.get_data('voltage'))
+        volt_lim = float(self.input.get_data('voltage limit'))
+        cur_lim = float(self.input.get_data('current limit'))
+        number_sondas = int(self.input.get_data('rows'))*int(self.input.get_data('columns'))
+        measures = int(self.input.get_data('measures'))
+        #output_filename = entry_outputfile.get()
+        dim_volt = self.lst_voltage_dim.index(self.input.get_data('voltage dimension'))
+        dim_volt_lim = self.lst_voltage_dim.index(self.input.get_data('voltage limit dimension'))
+        dim_cur_lim = self.lst_current_dim.index(self.input.get_data('current limit dimension'))
+        #tipo_arquivo = lst_outputfile_type.index(var_outputfile_type.get())
+        
+        delay = int(self.input.get_data('delay'))
+        delay = max(0, min(delay, 31))
+        if delay%2==0:
+            delay += 1
+        self.input.set_data('delay', delay)
+        self.state_indicator.config(text="Iniciando...")
         try:
-            arduino_port = self.input.get_data('port')
-            volts = float(self.input.get_data('voltage'))
-            volt_lim = float(self.input.get_data('voltage limit'))
-            cur_lim = float(self.input.get_data('current limit'))
-            number_sondas = int(self.input.get_data('rows'))*int(self.input.get_data('columns'))
-            measures = int(self.input.get_data('measures'))
-            #output_filename = entry_outputfile.get()
-            dim_volt = self.lst_voltage_dim.index(self.input.get_data('voltage dimension'))
-            dim_volt_lim = self.lst_voltage_dim.index(self.input.get_data('voltage limit dimension'))
-            dim_cur_lim = self.lst_current_dim.index(self.input.get_data('current limit dimension'))
-            #tipo_arquivo = lst_outputfile_type.index(var_outputfile_type.get())
-            
-            delay = int(self.input.get_data('delay'))
-            delay = max(0, min(delay, 31))
-            if delay%2==0:
-                delay += 1
-            self.input.set_var('delay', delay)
-            self.state_indicator.config(text="Iniciando...")
-
-        except (AttributeError,ValueError,TypeError):
-            #print(e.__annotations__)
-            self.state_indicator.config(text="Entrada Inválida")
+            a=1
+        except ValueError:
+            self.state_indicator.config(text="value error")
+            return True
+        except TypeError:
+            self.state_indicator.config(text="type error")
+            return True
+        except AttributeError:
+            self.state_indicator.config(text="attribute error")
             return True
         else:
             return False
