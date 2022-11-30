@@ -53,7 +53,7 @@ class GUI:
             delay = max(0, min(delay, 31))
             if delay%2==0:
                 delay += 1
-            self.input.set_var('delay', delay)
+            self.input.set_data('delay', delay)
             self.state_indicator.config(text="Iniciando...")
 
         except (AttributeError,ValueError,TypeError):

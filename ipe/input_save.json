@@ -5,7 +5,7 @@
     "voltage limit dimension": "V",
     "current limit": "8",
     "current limit dimension": "A",
-    "measures": "90",
+    "measures": "4",
     "rows": "8",
     "columns": "8",
     "delay": "8",
