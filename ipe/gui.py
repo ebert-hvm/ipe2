@@ -93,10 +93,11 @@ class GUI:
                 #table.write_cell(2, 0, 0, 0)
                 self.resources.start()
                 for m in range(self.configure_data['measures']):
+                    self.resources.run_arduino()
                     for i in range(self.configure_data['rows']):
                         for j in range(self.configure_data['columns']):
                             self.state_indicator.config(text=f"Medida : {m}\nSonda: {i*self.configure_data['columns']+j}")
-                            table.write_cell(self.resources.read_value, 0, i, j)
+                            table.write_cell(self.resources.read_value(), m, i, j)
                 self.resources.finish()
                 self.state_indicator.config(text= 'Completo')
                     

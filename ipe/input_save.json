@@ -1,13 +1,13 @@
 {
-    "voltage": "3",
+    "voltage": "5",
     "voltage dimension": "V",
-    "voltage limit": "8",
+    "voltage limit": "6",
     "voltage limit dimension": "V",
-    "current limit": "6",
-    "current limit dimension": "A",
-    "measures": "4",
+    "current limit": "10",
+    "current limit dimension": "mA",
+    "measures": "2",
     "rows": "2",
     "columns": "2",
-    "delay": "1",
-    "port": "Arduino Port"
+    "delay": "3",
+    "port": "COM4"
 }

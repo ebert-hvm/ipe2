@@ -73,6 +73,6 @@ class Table():
         self.tables[cur][i][j] = str(val)
         #self.tables[cur][i][j] = 4
 
-        print(self.tables)
+        #print(self.tables)
         #print(self.tables.__type__)
         

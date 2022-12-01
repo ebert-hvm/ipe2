@@ -53,11 +53,13 @@ class Resources:
         tm.sleep(c.sleep_time_power_supply)
         #int(self.input.get_data('rows'))*int(self.input.get_data('columns'))
         #int(self.input.get_data('delay'))
+        self.run_arduino()
+    def run_arduino(self):
         self.arduino.send_start(self.configure_data['probes number'], self.configure_data['delay'])
-        
     def read_value(self) -> None:
         tm.sleep(0.9*self.configure_data['delay'])
         read =  self.multimeter.query('READ?')
+        print(read)
         tm.sleep(0.1*self.configure_data['delay'])
         return float(read)
 
