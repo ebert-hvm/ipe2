@@ -41,4 +41,5 @@ class Input():
         with open('ipe/input_save.json', 'r', encoding='utf8') as openfile:
             self.input_data = json.load(openfile)
             for key in self.input_data.keys():
-                self.input_var[key].set(self.input_data[key])
+                if key != 'port':
+                    self.input_var[key].set(self.input_data[key])

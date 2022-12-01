@@ -1,27 +1,59 @@
 import pyvisa as visa
-from input import Input
 import time as tm
 import pandas as pd
-import constantes as c
-import arduino
+from . import constantes as c
+from .arduino import Arduino
+from .input import Input
+import serial
+import time
 
 
 class Resources:
-    def __init__(self, entrada: Input) -> None:
+    def __init__(self, input:Input) -> None:
         self.resources = visa.ResourceManager()
-        self.multimeter = self.resources.open_resource("GPIB0::22::INSTR") 
-        self.power_supply = self.resources.open_resource("USB0::0x0957::0x8B18::MY51144612::0::INSTR")
+        self.multimeter = None 
+        self.power_supply = None
+        self.arduino = None
         self.values = []
-        self.input = entrada
-        self.configure_arduino()
-        
+        self.input = input
+
+    def configure(self):
+        try:
+            self.multimeter = self.resources.open_resource("GPIB0::22::INSTR")
+            self.multimeter.query("*IDN?")
+        except visa.Error:
+            self.multimeter = None
+            return False, "Não foi possível conectar ao multímetro"
+        try:
+            self.power_supply = self.resources.open_resource("USB0::0x0957::0x8B18::MY51144612::0::INSTR")
+            self.power_supply.query("*IDN?")
+        except visa.Error:
+            self.power_supply = None
+            return False, "Não foi possível conectar à fonte"
+        if self.arduino is None or not self.arduino.is_connected():
+            return False, "Não foi possível conectar ao Arduino"
+        return True, "Aparelhos conectados"
+
+    def connect_arduino(self, port):
+        try:
+            self.arduino = Arduino(port)
+            return "conectado"
+        except serial.SerialException:
+            self.arduino = None
+            return "não foi possível conectar."
+
     def start(self) -> None:
-        self.power_supply.write(f"VOLT {str(self.input.voltagem)}")
-        self.power_supply.write(f"CURR:LIM {str(self.input.amp_lim)}")
-        self.power_supply.write(f"VOLT:LIM {str(self.input.volt_lim)}")
+        tm.sleep(c.sleep_time_power_supply)
+        self.power_supply.write(f"VOLT {5}")
+        self.power_supply.write(f"CURR:LIM {0.010}")
+        self.power_supply.write(f"VOLT:LIM {6}")
         tm.sleep(c.sleep_time_power_supply)
         self.power_supply.write("OUTP ON")
-        self.run_arduino()
+        tm.sleep(c.sleep_time_power_supply)
+        for i in range(5):
+            self.run_arduino()
+            time.sleep(4)
+        self.finish()
         
     def read_value(self) -> None:
         #tm.sleep(c.read_delay)
@@ -30,19 +62,14 @@ class Resources:
     def finish(self) -> None:
         self.power_supply.write("OUTP OFF")
         tm.sleep(c.sleep_time_power_supply)
+        self.stop_arduino()
     
     def to_data_frame(self) -> pd.core.frame.DataFrame:
         df = pd.DataFrame(self.values, columns= 'medidas')
         return df
 
-    def configure_arduino(self) -> None:
-        self.arduino = arduino.Arduino(port= self.input.arduino_port,
-                                        baudrate=c.baudrate,
-                                        probes_number= self.input.sondas,
-                                        time_delay= self.input.delay)
-
     def run_arduino(self) -> None:
-        self.arduino.send_start()
+        self.arduino.send_start(int(self.input.get_data('rows'))*int(self.input.get_data('columns')), int(self.input.get_data('delay')))
 
     def stop_arduino(self) -> None:
         # tm.sleep(c.delay_arduino)

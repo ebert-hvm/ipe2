@@ -4,69 +4,39 @@ import glob
 import serial
 import numpy as np
 import serial.tools.list_ports as ports
+from .arduino import Arduino
 from .input import Input
 from .table import Table
+from .resources import Resources
+from . import constantes as c
 import json
 
 
 class GUI:
     def __init__(self, window) -> None:
-        self.entrada=0
         self.top = window
         self.input = Input()
+        self.resources = Resources(self.input)
         self.build_interface()
+        #self.arduino = None
+    
     def import_input(self):
         self.input.load_input_data()
+
     def save_input(self):
         self.input.save_input_data()
-    def check_port(self):
-        try:
-            s = serial.Serial(self.input.entries["port"], timeout=0.1)
-            s = serial.close()
-            print('connection ok')
-        except:
-            self.input.get_data('port').set('Arduino Port')
-            print('could not connect')
     
     def start(self):
+        resources_ok, label = self.resources.configure()
         if not self.check_input_error():
-            table = Table(self.top, int(self.input.get_data('rows')), int(self.input.get_data('columns')), int(self.input.get_data('measures')))
-            print('oba')
-        else:
-            print('erro')
-         
+            self.state_indicator.config(text=label)
+            if resources_ok:
+                self.state_indicator.config(text=label)
+                table = Table(self.top, int(self.input.get_data('rows')), int(self.input.get_data('columns')), int(self.input.get_data('measures')))
+                self.resources.start()
+
     def check_input_error(self):
-        #try:
-        arduino_port = self.input.get_data('port')
-        volts = float(self.input.get_data('voltage'))
-        volt_lim = float(self.input.get_data('voltage limit'))
-        cur_lim = float(self.input.get_data('current limit'))
-        number_sondas = int(self.input.get_data('rows'))*int(self.input.get_data('columns'))
-        measures = int(self.input.get_data('measures'))
-        #output_filename = entry_outputfile.get()
-        dim_volt = self.lst_voltage_dim.index(self.input.get_data('voltage dimension'))
-        dim_volt_lim = self.lst_voltage_dim.index(self.input.get_data('voltage limit dimension'))
-        dim_cur_lim = self.lst_current_dim.index(self.input.get_data('current limit dimension'))
-        #tipo_arquivo = lst_outputfile_type.index(var_outputfile_type.get())
-        
-        delay = int(self.input.get_data('delay'))
-        delay = max(0, min(delay, 31))
-        if delay%2==0:
-            delay += 1
-        self.input.set_data('delay', delay)
-        self.state_indicator.config(text="Iniciando...")
         try:
-<<<<<<< HEAD
-            a=1
-        except ValueError:
-            self.state_indicator.config(text="value error")
-            return True
-        except TypeError:
-            self.state_indicator.config(text="type error")
-            return True
-        except AttributeError:
-            self.state_indicator.config(text="attribute error")
-=======
             arduino_port = self.input.get_data('port')
             volts = float(self.input.get_data('voltage'))
             volt_lim = float(self.input.get_data('voltage limit'))
@@ -84,15 +54,28 @@ class GUI:
             if delay%2==0:
                 delay += 1
             self.input.set_data('delay', delay)
-            self.state_indicator.config(text="Iniciando...")
 
-        except (AttributeError,ValueError,TypeError):
-            #print(e.__annotations__)
-            self.state_indicator.config(text="Entrada Inválida")
->>>>>>> a2570cb9787b45c5a6e9188c83996e19fec001f8
+        except ValueError:
+            self.state_indicator.config(text="value error")
+            return True
+        except TypeError:
+            self.state_indicator.config(text="type error")
+            return True
+        except AttributeError:
+            self.state_indicator.config(text="attribute error")
             return True
         else:
+            if number_sondas > 16:
+                self.state_indicator.config(text="O número de sondas máximo é 16")
+                return True
             return False
+    
+    def port_select(self, port):
+        self.input.set_data('port', port)
+        self.arduino_indicator.config(text="conectando...")
+        self.arduino_indicator.config(text=self.resources.connect_arduino(port))
+
+
     def refresh_ports(self, init=False):
             available_ports = [port for port,_,_ in sorted(ports.comports())]
             self.menu_ports["menu"].delete(0,"end")
@@ -102,10 +85,10 @@ class GUI:
                     if not init:
                         s = serial.Serial(port, timeout=0.1)
                         s.close()
-                    self.menu_ports["menu"].add_command(label=port,
-                                                        command= lambda port= port:self.input.set_data('port', port))
+                    self.menu_ports["menu"].add_command(label=port, command= lambda port= port:self.port_select(port))
                 except Exception:
-                    print(Exception)
+                    pass
+                    #print(Exception)
             self.menu_ports["menu"].add_command(label='Refresh', command= self.refresh_ports)
 
     def build_interface(self):
@@ -203,6 +186,8 @@ class GUI:
         ### PORTA SERIAL DO ARDUINO
 
         #available_ports = [port for port,_,_ in sorted(ports.comports())]
+        self.arduino_indicator = tk.Label(self.top, text= 'Selecione a porta.')
+        self.arduino_indicator.grid(row=8, column=0)
         var_port = tk.StringVar(self.top)
         var_port.set('Arduino Port')
         self.menu_ports = tk.OptionMenu(self.top,var_port, 'Refresh', command=self.refresh_ports)
@@ -219,7 +204,11 @@ class GUI:
         label_inputfile = tk.Label(self.top,text = 'Importar Entradas')
         label_inputfile.grid(row=10, column=0)
 
-        button_import = tk.Button(self.top, text= "Importar", bg= '#DDDDDD', width=10, command= self.import_input)
+        button_import = tk.Button(self.top,
+            text= "Importar",
+            bg= '#DDDDDD',
+            width=10,
+            command= lambda:self.import_input())
         button_import.grid(row=10, column=1)
 
         button_save = tk.Button(self.top, text= "Salvar", bg= '#DDDDDD', width=10, command= self.save_input)

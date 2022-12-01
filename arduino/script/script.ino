@@ -34,7 +34,7 @@ void setup()
 
 void loop()
 {
-    if(!start && Serial.available() > 0)
+    if(Serial.available() > 0)
     {
         ch1 = Serial.read();
         if(ch1)
@@ -46,7 +46,9 @@ void loop()
         }
         else
         {
-            //start = 0;
+            stop_count = 0;
+            start = 0;
+            key = 8;
         }
     }
     if(start)
@@ -71,6 +73,7 @@ void loop()
         {
             stop_count = 0;
             start = 0;
+            key = 8;
         }
     }
 }

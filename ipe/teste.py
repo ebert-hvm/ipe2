@@ -1,10 +1,11 @@
 from arduino import Arduino
 from time import sleep
 
-ard = Arduino('COM11', 9600, 4, 1)
+ard = Arduino('COM4', 9600, 3, 1)
+sleep(2)
 try:
     while True:
-        sleep(7)
         ard.send_start()
+        sleep(1)
 except KeyboardInterrupt:
-    ard.sen_stop()
+    ard.send_stop()

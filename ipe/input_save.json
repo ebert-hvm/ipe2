@@ -6,8 +6,8 @@
     "current limit": "8",
     "current limit dimension": "A",
     "measures": "4",
-    "rows": "8",
-    "columns": "8",
-    "delay": "8",
-    "port": "COM9"
+    "rows": "2",
+    "columns": "2",
+    "delay": "1",
+    "port": "COM4"
 }
