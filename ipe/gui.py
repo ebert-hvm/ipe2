@@ -10,6 +10,7 @@ from .table import Table
 from .resources import Resources
 from . import constantes as c
 import json
+import asyncio
 
 
 class GUI:
@@ -88,18 +89,41 @@ class GUI:
             resources_ok, label = self.resources.configure(self.configure_data)
             self.state_indicator.config(text=label)
             if resources_ok:
-                self.state_indicator.config(text=label)
-                table = Table(self.top, self.configure_data)
+                asyncio.run(self.async_tasks(label))
+                # self.state_indicator.config(text=label)
+                # self.table = Table(self.top, self.configure_data)
                 #table.write_cell(2, 0, 0, 0)
-                self.resources.start()
-                for m in range(self.configure_data['measures']):
-                    self.resources.run_arduino()
-                    for i in range(self.configure_data['rows']):
-                        for j in range(self.configure_data['columns']):
-                            self.state_indicator.config(text=f"Medida : {m}\nSonda: {i*self.configure_data['columns']+j}")
-                            table.write_cell(self.resources.read_value(), m, i, j)
-                self.resources.finish()
-                self.state_indicator.config(text= 'Completo')
+                # self.resources.start()
+                # for m in range(self.configure_data['measures']):
+                #     self.resources.run_arduino()
+                #     for i in range(self.configure_data['rows']):
+                #         for j in range(self.configure_data['columns']):
+                #             self.state_indicator.config(text=f"Medida : {m}\nSonda: {i*self.configure_data['columns']+j}")
+                #             self.table.write_cell(self.resources.read_value(), m, i, j)
+                # self.resources.finish()
+                # self.state_indicator.config(text= 'Completo')
+
+    async def async_tasks(self,label):
+        async with asyncio.TaskGroup() as tg:
+            task1 = tg.create_task(self.print_table(label))
+            task2 = tg.create_task(self.run_resouce())
+
+    async def print_table(self,label):
+        self.state_indicator.config(text=label)
+        self.table = Table(self.top, self.configure_data)    
+
+
+    async def run_resouce(self):
+        self.resources.start()
+        for m in range(self.configure_data['measures']):
+            self.resources.run_arduino()
+            for i in range(self.configure_data['rows']):
+                for j in range(self.configure_data['columns']):
+                    self.state_indicator.config(text=f"Medida : {m}\nSonda: {i*self.configure_data['columns']+j}")
+                    self.table.write_cell(self.resources.read_value(), m, i, j)
+        self.resources.finish()
+        self.state_indicator.config(text= 'Completo')
+
                     
     def build_interface(self):
         ### VOLTAGEM
