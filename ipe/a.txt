@@ -1,0 +1,6 @@
+
+2 pi d v/i(lim) = 1/sigma
+
+% acs(Cu) = 5.88*10^(7) s/m
+% acs(Si) = 10^(4) s/m
+% acs(Al) = 10^(-14) s/m
