@@ -12,10 +12,13 @@ class Table():
         #self.tables = np.array()
         self.tables = [[['' for k in range(self.col)] for j in range(self.row)] for i in range(self.tables_number)]
         #self.tables = [[['']*self.col]*self.row]*self.tables_number
+        self.elements = []
         self.grid = self.make_grid()
-  
         self.switch_table = self.modify_table()
-
+    
+    def remove_from_grid(self):
+        for el in self.elements:
+            el.grid_remove()
     def make_grid(self):
         grid = []
         for i in range(self.row):
@@ -27,11 +30,13 @@ class Table():
                 s.set('')
                 e = tk.Entry(self.root, width=10, bd= 5, textvariable=s)
                 e.grid(row=i+2, column=j+5)
+                self.elements.append(e)
                 lst.append(s)
             grid.append(lst)
         for i in range(self.col):
             label = tk.Label(self.root, text=str(i+1))
             label.grid(row=1, column=5+i)
+            self.elements.append(label)
   
         return grid
     
@@ -47,12 +52,14 @@ class Table():
         self.label.set(f'Medição {self.cur+1}')
         label = tk.Label(self.root, textvariable=self.label)
         label.grid(row=0, column=5)
-        
+        self.elements.append(label)
         previous_button.grid(row=self.row+2, column=5)
+        self.elements.append(previous_button)
         if self.col == 1:
             next_button.grid(row=self.row+2, column=5+self.col)
         else:   
             next_button.grid(row=self.row+2, column=4+self.col)
+        self.elements.append(next_button)
 
     def switch_tables(self, switch):
         if self.tables_number > self.cur+switch and self.cur+switch >-1:
