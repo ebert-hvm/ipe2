@@ -18,6 +18,7 @@ class GUI:
         self.input = Input()
         self.resources = Resources(self.input)
         self.build_interface()
+        self.configure_data = {}
         #self.arduino = None
     
     def import_input(self):
@@ -26,35 +27,26 @@ class GUI:
     def save_input(self):
         self.input.save_input_data()
     
-    def start(self):
-        resources_ok, label = self.resources.configure()
-        if not self.check_input_error():
-            self.state_indicator.config(text=label)
-            if resources_ok:
-                self.state_indicator.config(text=label)
-                table = Table(self.top, int(self.input.get_data('rows')), int(self.input.get_data('columns')), int(self.input.get_data('measures')))
-                self.resources.start()
 
     def check_input_error(self):
         try:
-            arduino_port = self.input.get_data('port')
-            volts = float(self.input.get_data('voltage'))
-            volt_lim = float(self.input.get_data('voltage limit'))
-            cur_lim = float(self.input.get_data('current limit'))
-            number_sondas = int(self.input.get_data('rows'))*int(self.input.get_data('columns'))
-            measures = int(self.input.get_data('measures'))
-            #output_filename = entry_outputfile.get()
-            dim_volt = self.lst_voltage_dim.index(self.input.get_data('voltage dimension'))
-            dim_volt_lim = self.lst_voltage_dim.index(self.input.get_data('voltage limit dimension'))
-            dim_cur_lim = self.lst_current_dim.index(self.input.get_data('current limit dimension'))
-            #tipo_arquivo = lst_outputfile_type.index(var_outputfile_type.get())
-            
             delay = int(self.input.get_data('delay'))
             delay = max(0, min(delay, 31))
             if delay%2==0:
                 delay += 1
             self.input.set_data('delay', delay)
-
+            
+            self.configure_data['delay'] = int(self.input.get_data('delay'))
+            self.configure_data['voltage'] = float(self.input.get_data('voltage'))*10**(-3*self.lst_voltage_dim.index(self.input.get_data('voltage dimension')))
+            self.configure_data['voltage limit'] = float(self.input.get_data('voltage limit'))*10**(-3*self.lst_voltage_dim.index(self.input.get_data('voltage limit dimension')))
+            self.configure_data['current limit'] = float(self.input.get_data('current limit'))*10**(-3*self.lst_current_dim.index(self.input.get_data('current limit dimension')))
+            self.configure_data['rows'] = int(self.input.get_data('rows'))
+            self.configure_data['columns'] = int(self.input.get_data('columns'))
+            self.configure_data['probes number'] = int(self.input.get_data('rows'))*int(self.input.get_data('columns'))
+            self.configure_data['measures'] = int(self.input.get_data('measures'))
+            #output_filename = entry_outputfile.get()
+            #tipo_arquivo = lst_outputfile_type.index(var_outputfile_type.get())
+                
         except ValueError:
             self.state_indicator.config(text="value error")
             return True
@@ -65,7 +57,7 @@ class GUI:
             self.state_indicator.config(text="attribute error")
             return True
         else:
-            if number_sondas > 16:
+            if self.configure_data['probes number'] > 16:
                 self.state_indicator.config(text="O número de sondas máximo é 16")
                 return True
             return False
@@ -91,6 +83,24 @@ class GUI:
                     #print(Exception)
             self.menu_ports["menu"].add_command(label='Refresh', command= self.refresh_ports)
 
+    def start(self):
+        if not self.check_input_error():
+            resources_ok, label = self.resources.configure(self.configure_data)
+            self.state_indicator.config(text=label)
+            if resources_ok:
+                self.state_indicator.config(text=label)
+                table = Table(self.top, self.configure_data)
+                #table.write_cell(2, 0, 0, 0)
+                self.resources.start()
+                for m in range(self.configure_data['measures']):
+                    self.resources.run_arduino()
+                    for i in range(self.configure_data['rows']):
+                        for j in range(self.configure_data['columns']):
+                            self.state_indicator.config(text=f"Medida : {m}\nSonda: {i*self.configure_data['columns']+j}")
+                            table.write_cell(self.resources.read_value(), m, i, j)
+                self.resources.finish()
+                self.state_indicator.config(text= 'Completo')
+                    
     def build_interface(self):
         ### VOLTAGEM
 
