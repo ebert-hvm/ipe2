@@ -1,7 +1,7 @@
+from time import sleep
 import serial
 import serial.tools.list_ports
 ports = serial.tools.list_ports.comports()
-
 #for port,_,_ in sorted(ports):
 #        print(port)
 
@@ -9,7 +9,7 @@ class Arduino():
     def __init__(self, port, baudrate=9600):
         self.port = port
         self.arduino = serial.Serial(port= port, baudrate= baudrate, timeout=.1)
-
+        sleep(1)
     def is_connected(self):
         try:
             self.arduino.inWaiting()
