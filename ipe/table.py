@@ -4,11 +4,14 @@ import numpy as np
 class Table():
     def __init__(self, root, configure_data):
         self.root = root
-        self.label = tk.StringVar(self.root) 
+        self.label = tk.StringVar(self.root)
+        self.next_measure = tk.StringVar(self.root)
+        self.configure_data = configure_data
         self.row = configure_data['rows']
         self.col = configure_data['columns']
         self.tables_number = configure_data['measures']
         self.cur = 0
+        self.measure_index = 1
         #self.tables = np.array()
         self.tables = [[['' for k in range(self.col)] for j in range(self.row)] for i in range(self.tables_number)]
         #self.tables = [[['']*self.col]*self.row]*self.tables_number
@@ -25,6 +28,7 @@ class Table():
         for i in range(self.row):
             labelc = tk.Label(self.root, text=str(i+1))
             labelc.grid(row=i+2, column=4)
+            self.elements.append(labelc)
             lst = []
             for j in range(self.col):
                 s = tk.StringVar(self.root)
@@ -47,6 +51,10 @@ class Table():
         # self.tables[self.cur][i][j].delete(0, tk.END)
         # self.tables[self.cur][i][j].insert(tk.END, val)
 
+    def update_measure_index(self):
+        self.measure_index = min(self.measure_index+1,self.configure_data['measures'])
+        self.next_measure.set(f'Próxima Medida\n({self.measure_index}/{self.configure_data["measures"]})')
+
     def configure_table(self):
         previous_button = tk.Button(self.root, text= 'Anterior', bg='#DDDDDD', width=10, command= lambda switch =-1 :self.switch_tables(switch))
         next_button = tk.Button(self.root, text= 'Próximo', bg='#DDDDDD', width=10, command= lambda switch = 1 :self.switch_tables(switch))
@@ -54,6 +62,10 @@ class Table():
         label = tk.Label(self.root, textvariable=self.label)
         label.grid(row=0, column=5)
         self.elements.append(label)
+        self.next_measure.set(f'Próxima Medida\n({self.measure_index}/{self.configure_data["measures"]})')
+        next_measure = tk.Button(self.root, textvariable=self.next_measure, bg='#DDDDDD', width=20, command= lambda : self.update_measure_index())
+        next_measure.grid(row=0, column=6)
+        self.elements.append(next_measure)
         previous_button.grid(row=self.row+2, column=5)
         self.elements.append(previous_button)
         if self.col == 1:
