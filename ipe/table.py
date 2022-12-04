@@ -14,7 +14,7 @@ class Table():
         #self.tables = [[['']*self.col]*self.row]*self.tables_number
         self.grid = self.make_grid()
   
-        self.switch_table = self.modify_table()
+        self.switch_table = self.configure_table()
 
     def make_grid(self):
         grid = []
@@ -41,7 +41,7 @@ class Table():
         # self.tables[self.cur][i][j].delete(0, tk.END)
         # self.tables[self.cur][i][j].insert(tk.END, val)
 
-    def modify_table(self):
+    def configure_table(self):
         previous_button = tk.Button(self.root, text= 'Anterior', bg='#DDDDDD', width=10, command= lambda switch =-1 :self.switch_tables(switch))
         next_button = tk.Button(self.root, text= 'Próximo', bg='#DDDDDD', width=10, command= lambda switch = 1 :self.switch_tables(switch))
         self.label.set(f'Medição {self.cur+1}')
