@@ -1,13 +1,15 @@
 import pandas as pd
+import numpy as np
 
 
 class Data:
-    def __init__(self, data: pd.core.frame.DataFrame, number_sondas) -> None:
+    def __init__(self, data: pd.core.frame.DataFrame, number_sondas,cols) -> None:
         self.data = data
+        self.measures= self.data.shape[0] 
         self.number_sondas = number_sondas
         self.trata_dados()
-        self.graphic_data(2,2)
-    
+        self.graphic_data(cols)
+
     def trata_dados(self) -> None:
         self.data['mod'] = [(i+1) % self.number_sondas for i in range(self.data.shape[0])]
         df = pd.DataFrame()
@@ -32,18 +34,35 @@ class Data:
         elif tipo_arquivo == 1:
             self.data.to_excel(nome_arquivo)
 
-    def graphic_data(self, rows, cols):
-        self.data['mod_rows'] = [(i+1) % cols for i in range(self.data.shape[0])]
-        df = pd.DataFrame()
-        aux = []
-        grouped_measures = self.data.groupby("mod_rows")
-        for element in grouped_measures:
-            element[1]['mod_cols'] = [(i+1) % rows for i in range(element[1].shape[0])]
-            aux_element = element[1].groupby("mod_cols")
-            for item in aux_element:
-                df = pd.concat([df, item[1]], ignore_index=True, axis=1)        
-        df.to_csv('graphic.csv', index=False)
-        pass
+    def graphic_data(self, cols):
+        print(self.data)
+        aux = self.data.to_numpy()
+        number = int(np.sqrt(self.number_sondas))
+        shape = (cols,cols)
+        guard = []
+        for element in self.data.columns:
+            guard.append(np.zeros((cols,cols)))
+
+        aux_arr = []
+        for i in range(len(aux[0])):
+            for element in aux:
+                aux_arr.append(element[i])
+            aux_array = np.array(aux_arr)
+            aux_array = aux_array.reshape(shape)
+            guard[i] = aux_array
+            aux_arr = []
+        guard = np.array(guard)
+        guard = guard.reshape((number,number,cols,cols))
+        print(guard)
+
+        
+       
+
+dic = {'medidas': [i for i in range(3**4)]}
+df = pd.DataFrame(dic)
+
+obj = Data(df, 3, 3)
 
 
-a = Data(pd.DataFrame({'medidas':[1,2,3,4,5,6,7,8]}), 4)
+
+
