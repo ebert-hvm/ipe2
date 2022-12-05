@@ -48,11 +48,11 @@ class Resources:
 
     def start(self) -> None:
         if self.power_supply is not None:
-            tm.sleep(c.sleep_time_power_supply)
+           # tm.sleep(c.sleep_time_power_supply)
             
-            tm.sleep(c.sleep_time_power_supply)
+           # tm.sleep(c.sleep_time_power_supply)
             self.power_supply.write("OUTP ON")
-            tm.sleep(c.sleep_time_power_supply)
+          #  tm.sleep(c.sleep_time_power_supply)
         #int(self.input.get_data('rows'))*int(self.input.get_data('columns'))
         #int(self.input.get_data('delay'))
         self.run_arduino()
@@ -60,13 +60,15 @@ class Resources:
     def run_arduino(self):
         if self.arduino is not None:
             self.arduino.send_start(self.configure_data['probes number'], self.configure_data['delay'])
+        else:
+            print('Arduino is None')
 
     def read_value(self) -> None:
         if self.multimeter is not None:
-            tm.sleep(0.9*self.configure_data['delay'])
+            #tm.sleep(0.9*self.configure_data['delay'])
             read =  self.multimeter.query('READ?')
             #print(read)
-            tm.sleep(0.1*self.configure_data['delay'])
+            #tm.sleep(0.1*self.configure_data['delay'])
             return float(read)
         else:
             #await asyncio.sleep(1)
@@ -75,7 +77,7 @@ class Resources:
     def finish(self) -> None:
         if self.power_supply is not None:
             self.power_supply.write("OUTP OFF")
-            tm.sleep(c.sleep_time_power_supply)
+            #tm.sleep(c.sleep_time_power_supply)
         self.stop_arduino()
     
     def to_data_frame(self) -> pd.core.frame.DataFrame:

@@ -94,21 +94,22 @@ class GUI:
             if not self.check_input_error():
                 resources_ok, label = self.resources.configure(self.configure_data)
                 self.state_indicator.config(text=label)
-                if resources_ok or 1==1:
+                if resources_ok:
                     #self.async_tasks(label)
                     self.state_indicator.config(text=label)
                     if self.table is not None:
                         self.table.remove_from_grid()
                     self.table = Table(self.root, self.configure_data)
                     #table.write_cell(2, 0, 0, 0)
+                    await asyncio.sleep(0.5)
                     self.resources.start()
                     for m in range(self.configure_data['measures']):
-                        self.resources.run_arduino()
                         for i in range(self.configure_data['rows']):
                             for j in range(self.configure_data['columns']):
-                                await asyncio.sleep(1)
+                                await asyncio.sleep(0.9*self.configure_data['delay'])
                                 self.state_indicator.config(text=f"Medida : {m}\nSonda: {i*self.configure_data['columns']+j}")
                                 self.table.write_cell(self.resources.read_value(), m, i, j)
+                                await asyncio.sleep(0.1*self.configure_data['delay'])
                     self.resources.finish()
                     self.state_indicator.config(text= 'Completo')
             self.start_trigger = 0

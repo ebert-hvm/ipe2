@@ -56,7 +56,6 @@ class Data:
         print(guard)
 
         
-       
 
 dic = {'medidas': [i for i in range(3**4)]}
 df = pd.DataFrame(dic)
