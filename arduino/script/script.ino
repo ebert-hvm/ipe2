@@ -1,3 +1,5 @@
+#include <Servo.h>
+
 #define A1 2
 #define B1 3
 #define C1 4
@@ -7,11 +9,13 @@
 #define D2 8
 #define C2 9
 #define N 4
+#define servoPin 10
 
 int key, timedelay, start, stop_count, total_probes;
 int pins1[N] = {A1, B1, C1, D1};
 int pins2[N] = {A2, B2, C2, D2};
 unsigned char ch1, ch2;
+Servo myservo;
 
 void setup()
 {
@@ -25,6 +29,7 @@ void setup()
     pinMode(C2, OUTPUT);
     pinMode(D2, OUTPUT);
     pinMode(A0, INPUT);
+    myservo.attach(servoPin,600,2300);
     key = 8;
     start = 0;
     stop_count = 0;
@@ -68,7 +73,9 @@ void loop()
         }
         // Serial.println(analogRead(A0));
         key = 8 + (key + 1 - 8) % N;
+        myservo.write(0);
         delay(timedelay);
+        myservo.write(90);
         if(++stop_count == total_probes)
         {
             stop_count = 0;

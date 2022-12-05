@@ -6,8 +6,10 @@
     "current limit": "10",
     "current limit dimension": "mA",
     "measures": "1",
-    "rows": "2",
-    "columns": "2",
-    "delay": "3",
-    "port": "COM4"
+    "rows": "3",
+    "columns": "5",
+    "delay": "1",
+    "port": "Arduino Port",
+    "probes distance": "10",
+    "probes end distance": "1"
 }

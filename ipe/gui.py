@@ -8,6 +8,7 @@ from .arduino import Arduino
 from .input import Input
 from .table import Table
 from .resources import Resources
+from .graphic import Graphic
 from . import constantes as c
 import json
 import asyncio
@@ -19,6 +20,7 @@ class GUI:
         self.root = tk.Tk()
         self.input = Input()
         self.table = None
+        self.graph = None
         self.resources = Resources(self.input)
         self.configure_data = {}
         self.close_windows = 0
@@ -49,6 +51,8 @@ class GUI:
             self.configure_data['columns'] = int(self.input.get_data('columns'))
             self.configure_data['probes number'] = int(self.input.get_data('rows'))*int(self.input.get_data('columns'))
             self.configure_data['measures'] = int(self.input.get_data('measures'))
+            self.configure_data['probes distance'] = int(self.input.get_data('probes distance'))
+            self.configure_data['probes end distance'] = int(self.input.get_data('probes end distance'))
             #output_filename = entry_outputfile.get()
             #tipo_arquivo = lst_outputfile_type.index(var_outputfile_type.get())
                 
@@ -94,7 +98,7 @@ class GUI:
             if not self.check_input_error():
                 resources_ok, label = self.resources.configure(self.configure_data)
                 self.state_indicator.config(text=label)
-                if resources_ok:
+                if resources_ok or 1==1:
                     #self.async_tasks(label)
                     self.state_indicator.config(text=label)
                     if self.table is not None:
@@ -111,6 +115,8 @@ class GUI:
                                 self.table.write_cell(self.resources.read_value(), m, i, j)
                                 await asyncio.sleep(0.1*self.configure_data['delay'])
                     self.resources.finish()
+                    self.graph = Graphic(self.table.tables, self.configure_data)
+                    self.graph.set_axis()
                     self.state_indicator.config(text= 'Completo')
             self.start_trigger = 0
 
@@ -228,7 +234,19 @@ class GUI:
         entry_delay.grid(row=6, column=1)
         self.input.add_var('delay', var_delay)
 
+        var_probes_dist = tk.StringVar(self.root)
+        label_probes_dist = tk.Label(self.root, text='Distância entre as sondas (mm)')
+        label_probes_dist.grid(row=7, column=0)
+        entry_probes_dist = tk.Entry(self.root, bd=5, width=30, textvariable= var_probes_dist)
+        entry_probes_dist.grid(row=7, column=1)
+        self.input.add_var('probes distance', var_probes_dist)
 
+        var_probes_end_dist = tk.StringVar(self.root)
+        label_probes_end_dist = tk.Label(self.root, text='Distância entre as pontas da sonda (mm)')
+        label_probes_end_dist.grid(row=8, column=0)
+        entry_probes_end_dist = tk.Entry(self.root, bd=5, width=30, textvariable= var_probes_end_dist)
+        entry_probes_end_dist.grid(row=8, column=1)
+        self.input.add_var('probes end distance', var_probes_end_dist)
         ### ARQUIVO DE SAIDA
 
         #label_outputfile = tk.Label(self.root,text = 'Arquivo de saida')
@@ -241,17 +259,17 @@ class GUI:
         #var_outputfile_type.set('Tipo do arquivo')
         #menu_outputfile_type = tk.OptionMenu(self.root,var_outputfile_type, *lst_outputfile_type)
         #menu_outputfile_type.grid(row=7, column=2)
-        
+                
         ### PORTA SERIAL DO ARDUINO
 
         #available_ports = [port for port,_,_ in sorted(ports.comports())]
         self.arduino_indicator = tk.Label(self.root, text= 'Selecione a porta.')
-        self.arduino_indicator.grid(row=8, column=0)
+        self.arduino_indicator.grid(row=9, column=0)
         var_port = tk.StringVar(self.root)
         var_port.set('Arduino Port')
         self.menu_ports = tk.OptionMenu(self.root,var_port, 'Refresh', command=self.refresh_ports)
         self.refresh_ports(init=True)
-        self.menu_ports.grid(row=8, column=1)
+        self.menu_ports.grid(row=9, column=1)
         self.input.add_var('port', var_port)
         #self.menu_ports = tk.OptionMenu(self.root,var_port, available_ports[0], command=check_port)
         #self.menu_ports["menu"].add_command(label='Refresh', command=refresh_ports)
